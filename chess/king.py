@@ -9,11 +9,11 @@ class King(Piece):
         super().__init__(color, position, board, "K")
 
     def possible_moves(self) -> list:
-        possibleMoves = []
+        possible_moves = []
         for row in range(0, self.board.rows):
-            possibleMoves.append([])
+            possible_moves.append([])
             for _ in range(0, self.board.cols):
-                possibleMoves[row].append(False)
+                possible_moves[row].append(False)
 
         x = self.position.x
         y = self.position.y
@@ -21,41 +21,41 @@ class King(Piece):
         # Up
         new_pos = Position(x - 1, y)
         if self.board.valid_position(new_pos, self.color):
-            possibleMoves[new_pos.x][new_pos.y] == True
+            possible_moves[new_pos.x][new_pos.y] = True
 
         # Up Right
         new_pos = Position(x - 1, y + 1)
         if self.board.valid_position(new_pos, self.color):
-            possibleMoves[new_pos.x][new_pos.y] == True
+            possible_moves[new_pos.x][new_pos.y] = True
 
         # Right
         new_pos = Position(x, y + 1)
         if self.board.valid_position(new_pos, self.color):
-            possibleMoves[new_pos.x][new_pos.y] == True
+            possible_moves[new_pos.x][new_pos.y] = True
 
         # Down Right
         new_pos = Position(x + 1, y + 1)
         if self.board.valid_position(new_pos, self.color):
-            possibleMoves[new_pos.x][new_pos.y] == True
+            possible_moves[new_pos.x][new_pos.y] = True
 
         # Down
         new_pos = Position(x + 1, y)
         if self.board.valid_position(new_pos, self.color):
-            possibleMoves[new_pos.x][new_pos.y] == True
+            possible_moves[new_pos.x][new_pos.y] = True
 
         # Down Left
         new_pos = Position(x + 1, y - 1)
         if self.board.valid_position(new_pos, self.color):
-            possibleMoves[new_pos.x][new_pos.y] == True
+            possible_moves[new_pos.x][new_pos.y] = True
 
         # Left
         new_pos = Position(x, y - 1)
         if self.board.valid_position(new_pos, self.color):
-            possibleMoves[new_pos.x][new_pos.y] == True
+            possible_moves[new_pos.x][new_pos.y] = True
 
         # Up Left
         new_pos = Position(x - 1, y - 1)
         if self.board.valid_position(new_pos, self.color):
-            possibleMoves[new_pos.x][new_pos.y] == True
+            possible_moves[new_pos.x][new_pos.y] = True
 
-        return possibleMoves
+        return possible_moves

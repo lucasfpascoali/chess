@@ -9,11 +9,11 @@ class Tower(Piece):
         super().__init__(color, position, board, "R")
 
     def possible_moves(self) -> list:
-        possibleMoves = []
+        possible_moves = []
         for row in range(0, self.board.rows):
-            possibleMoves.append([])
+            possible_moves.append([])
             for _ in range(0, self.board.cols):
-                possibleMoves[row].append(False)
+                possible_moves[row].append(False)
 
         x = self.position.x
         y = self.position.y
@@ -21,37 +21,37 @@ class Tower(Piece):
         # Calculating possible moves to left
         for square in range(y - 1, -1, -1):
             pos = Position(x, square)
-            if self.__board.valid_position(pos, self.color):
-                possibleMoves[x][square] = True
+            if self.board.valid_position(pos, self.color):
+                possible_moves[x][square] = True
 
-            if self.__board.position_has_piece(pos):
+            if self.board.position_has_piece(pos):
                 break
 
         # Calculating possible moves to right
-        for square in range(y + 1, self.__board.cols):
+        for square in range(y + 1, self.board.cols):
             pos = Position(x, square)
-            if self.__board.valid_position(pos, self.color):
-                possibleMoves[x][square] = True
+            if self.board.valid_position(pos, self.color):
+                possible_moves[x][square] = True
 
-            if self.__board.position_has_piece(pos):
+            if self.board.position_has_piece(pos):
                 break
 
         # Calculating possible moves to up
         for square in range(x - 1, -1, -1):
             pos = Position(square, y)
-            if self.__board.valid_position(pos, self.color):
-                possibleMoves[square][y] = True
+            if self.board.valid_position(pos, self.color):
+                possible_moves[square][y] = True
 
-            if self.__board.position_has_piece(pos):
+            if self.board.position_has_piece(pos):
                 break
 
         # Calculating possible moves to down
-        for square in range(x + 1, self.__board.rows):
+        for square in range(x + 1, self.board.rows):
             pos = Position(square, y)
-            if self.__board.valid_position(pos, self.color):
-                possibleMoves[square][y] = True
+            if self.board.valid_position(pos, self.color):
+                possible_moves[square][y] = True
 
-            if self.__board.position_has_piece(pos):
+            if self.board.position_has_piece(pos):
                 break
 
-        return possibleMoves
+        return possible_moves

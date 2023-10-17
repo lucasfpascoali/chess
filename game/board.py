@@ -36,10 +36,10 @@ class Board:
         return self.get_piece_by_position(position) != None
 
     def valid_position(self, position: Position, color: str) -> bool:
-        if position.x < 0 or position.x >= self.__board.rows:
+        if position.x < 0 or position.x >= self.__rows:
             return False
 
-        if position.y < 0 or position.y >= self.__board.cols:
+        if position.y < 0 or position.y >= self.__cols:
             return False
 
         piece_in_pos = self.get_piece_by_position(position)
