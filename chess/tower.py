@@ -23,3 +23,35 @@ class Tower(Piece):
             pos = Position(x, square)
             if self.__board.valid_position(pos, self.color):
                 possibleMoves[x][square] = True
+
+            if self.__board.position_has_piece(pos):
+                break
+
+        # Calculating possible moves to right
+        for square in range(y + 1, self.__board.cols):
+            pos = Position(x, square)
+            if self.__board.valid_position(pos, self.color):
+                possibleMoves[x][square] = True
+
+            if self.__board.position_has_piece(pos):
+                break
+
+        # Calculating possible moves to up
+        for square in range(x - 1, -1, -1):
+            pos = Position(square, y)
+            if self.__board.valid_position(pos, self.color):
+                possibleMoves[square][y] = True
+
+            if self.__board.position_has_piece(pos):
+                break
+
+        # Calculating possible moves to down
+        for square in range(x + 1, self.__board.rows):
+            pos = Position(square, y)
+            if self.__board.valid_position(pos, self.color):
+                possibleMoves[square][y] = True
+
+            if self.__board.position_has_piece(pos):
+                break
+
+        return possibleMoves
