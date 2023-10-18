@@ -6,6 +6,7 @@ from game.piece import Piece
 from chess.king import King
 from chess.tower import Tower
 from chess.bishop import Bishop
+from chess.knight import Knight
 from colorama import init as colorama_init
 from colorama import Fore, Back, Style
 
@@ -26,6 +27,8 @@ class Match:
                             self.board), Position(7, 0))
         self.board.addPiece(Bishop("white", Position(3, 3),
                             self.board), Position(3, 3))
+        self.board.addPiece(Knight("black", Position(2, 2),
+                            self.board), Position(2, 2))
 
         self.print_board()
 
