@@ -5,10 +5,13 @@ from game.position import Position
 from game.piece import Piece
 from chess.king import King
 from chess.tower import Tower
+from colorama import init as colorama_init
+from colorama import Fore, Back, Style
 
 
 class Match:
     def __init__(self):
+        colorama_init()
         player1 = Player("white")
         player2 = Player("black")
         self.__turn = 1
@@ -16,7 +19,7 @@ class Match:
         self.board = Board()
 
     def start_match(self):
-        self.board.addPiece(King("white", Position(7, 4),
+        self.board.addPiece(King("black", Position(7, 4),
                             self.board), Position(7, 4))
         self.board.addPiece(Tower("white", Position(7, 0),
                             self.board), Position(7, 0))
@@ -33,10 +36,7 @@ class Match:
             print(f"{8 - row} ", end='')
             for col in range(0, self.board.cols):
                 piece = self.board.get_piece_by_position(Position(row, col))
-                if piece == None:
-                    print("_ ", end='')
-                else:
-                    print(f"{piece.sign} ", end='')
+                self.__print_piece(piece)
 
             print()
 
@@ -49,13 +49,23 @@ class Match:
             for col in range(0, self.board.cols):
                 piece_on_pos = self.board.get_piece_by_position(
                     Position(row, col))
-                if possible_moves[row][col]:
-                    print("X ", end='')
-                elif piece_on_pos == None:
-                    print("_ ", end='')
+                if possible_moves[row][col] and piece_on_pos == None:
+                    print(f"{Back.RED}x{Style.RESET_ALL} ", end='')
+                elif possible_moves[row][col] and piece_on_pos.color != piece.color:
+                    print(Back.RED, end='')
+                    self.__print_piece(piece_on_pos)
+                    print(Style.RESET_ALL, end='')
                 else:
-                    print(f"{piece_on_pos.sign} ", end='')
+                    self.__print_piece(piece_on_pos)
 
             print()
 
         print("  a b c d e f g h")
+
+    def __print_piece(self, piece: Piece | None):
+        if piece == None:
+            print("_ ", end='')
+        elif piece.color == 'white':
+            print(f"{piece.sign} ", end='')
+        else:
+            print(f"{Fore.YELLOW}{piece.sign}{Style.RESET_ALL} ", end='')
