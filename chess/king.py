@@ -8,6 +8,8 @@ class King(Piece):
     def __init__(self, color: str, position: Position, board: Board):
         super().__init__(color, position, board, "K")
 
+    # NEED TO BE REMADE ON THE FUTURE (WE NEED TO CALCULATE IF KING MOVE WILL NOT PUT HIM ON CHECK)
+    # BACK TRACKING NEEDED
     def possible_moves(self) -> list:
         possible_moves = []
         for row in range(0, self.board.rows):
