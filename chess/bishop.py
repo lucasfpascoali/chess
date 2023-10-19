@@ -18,36 +18,37 @@ class Bishop(Piece):
         x = self.position.x
         y = self.position.y
 
-        # Calculating possible moves down right
+        downRightBreak = False
+        downLeftBreak = False
+        upRightBreak = False
+        upLeftBreak = False
+        # Calculating all diagonals in just one loop :)
         for square in range(1, 8):
             pos = Position(x + square, y + square)
-            if self.board.valid_position(pos, self.color):
+            if self.board.valid_position(pos, self.color) and not downRightBreak:
                 possible_moves[x + square][y + square] = True
                 if self.board.position_has_piece(pos):
-                    break
+                    downRightBreak = True
 
-        # Calculating possible moves down left
-        for square in range(1, 8):
             pos = Position(x + square, y - square)
-            if self.board.valid_position(pos, self.color):
+            if self.board.valid_position(pos, self.color) and not downLeftBreak:
                 possible_moves[x + square][y - square] = True
                 if self.board.position_has_piece(pos):
-                    break
+                    downLeftBreak = True
 
-        # Calculating possible moves up right
-        for square in range(1, 8):
             pos = Position(x - square, y + square)
-            if self.board.valid_position(pos, self.color):
+            if self.board.valid_position(pos, self.color) and not upRightBreak:
                 possible_moves[x - square][y + square] = True
                 if self.board.position_has_piece(pos):
-                    break
+                    upRightBreak = True
 
-        # Calculating possible moves up left
-        for square in range(1, 8):
             pos = Position(x - square, y - square)
-            if self.board.valid_position(pos, self.color):
+            if self.board.valid_position(pos, self.color) and not upLeftBreak:
                 possible_moves[x - square][y - square] = True
                 if self.board.position_has_piece(pos):
-                    break
+                    upLeftBreak = True
+
+            if downLeftBreak and downRightBreak and upLeftBreak and upRightBreak:
+                break
 
         return possible_moves
