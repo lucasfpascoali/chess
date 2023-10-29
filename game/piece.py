@@ -27,6 +27,9 @@ class Piece(ABC):
     def sign(self) -> str:
         return self.__sign
 
+    def change_position(self, position: Position):
+        self.__position = position
+
     @abstractmethod
     def possible_moves(self) -> list:
         pass
