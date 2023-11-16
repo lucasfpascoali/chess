@@ -77,6 +77,7 @@ class Board:
 
     def add_captured_piece(self, piece: Piece):
         self.__captured_pieces[piece.color].append(piece)
+        self.__pieces_in_game[piece.color].remove(piece)
 
     def get_captured_pieces_by_color(self, color: str) -> list:
         return self.__captured_pieces[color]
@@ -89,3 +90,19 @@ class Board:
 
     def get_all_pieces_in_game(self) -> list:
         return [*self.__pieces_in_game["white"], *self.__pieces_in_game["black"]]
+
+    def verify_check(self, color) -> list:
+        player_king = self.get_king_by_color(color)
+        enemy_color = "white" if color == "black" else "black"
+        enemy_pieces_atacking = []
+
+        for piece in self.get_pieces_in_game_by_color(enemy_color):
+            if piece.is_atacking_pos(player_king.position):
+                enemy_pieces_atacking.append(piece)
+
+        return enemy_pieces_atacking
+
+    def get_king_by_color(self, color: str) -> Piece:
+        for piece in self.__pieces_in_game[color]:
+            if piece.sign == 'K':
+                return piece

@@ -30,6 +30,13 @@ class Piece(ABC):
     def change_position(self, position: Position):
         self.__position = position
 
+    def is_atacking_pos(self, position: Position) -> bool:
+        return self.possible_moves()[position.x][position.y]
+
     @abstractmethod
     def possible_moves(self) -> list:
+        pass
+
+    @abstractmethod
+    def houses_to_enemy_king(self) -> list:
         pass

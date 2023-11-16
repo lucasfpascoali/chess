@@ -52,3 +52,53 @@ class Bishop(Piece):
                 break
 
         return possible_moves
+
+    def houses_to_enemy_king(self) -> list:
+        enemy_color = "white" if self.color == "black" else "black"
+        enemy_king = self.board.get_king_by_color(enemy_color)
+
+        houses_to_enemy_king = []
+
+        # Enemy king is on the up left diagonal
+        if enemy_king.position.x < self.position.x and enemy_king.position.y < self.position.y:
+            for square in range(1, 8):
+                if enemy_king.position.x == self.position.x - square and enemy_king.position.y == self.position.y - square:
+                    break
+
+                houses_to_enemy_king.append(
+                    Position(self.position.x - square, self.position.y - square))
+
+            return houses_to_enemy_king
+
+        # Enemy king is on the up right diagonal
+        if enemy_king.position.x > self.position.x and enemy_king.position.y < self.position.y:
+            for square in range(1, 8):
+                if enemy_king.position.x == self.position.x + square and enemy_king.position.y == self.position.y - square:
+                    break
+
+                houses_to_enemy_king.append(
+                    Position(self.position.x + square, self.position.y - square))
+
+            return houses_to_enemy_king
+
+        # Enemy king is on the down left diagonal
+        if enemy_king.position.x < self.position.x and enemy_king.position.y > self.position.y:
+            for square in range(1, 8):
+                if enemy_king.position.x == self.position.x - square and enemy_king.position.y == self.position.y + square:
+                    break
+
+                houses_to_enemy_king.append(
+                    Position(self.position.x - square, self.position.y + square))
+
+            return houses_to_enemy_king
+
+        # Enemy king is on the down right diagonal
+        if enemy_king.position.x > self.position.x and enemy_king.position.y > self.position.y:
+            for square in range(1, 8):
+                if enemy_king.position.x == self.position.x + square and enemy_king.position.y == self.position.y + square:
+                    break
+
+                houses_to_enemy_king.append(
+                    Position(self.position.x + square, self.position.y + square))
+
+            return houses_to_enemy_king

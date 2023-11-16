@@ -25,6 +25,8 @@ class Match:
     def start_match(self):
         self.board.add_piece(King("black", Position(7, 4),
                                   self.board), Position(7, 4))
+        self.board.add_piece(King("white", Position(0, 4),
+                                  self.board), Position(0, 4))
         self.board.add_piece(Tower("white", Position(7, 0),
                                    self.board), Position(7, 0))
         self.board.add_piece(Bishop("white", Position(3, 3),
@@ -48,6 +50,27 @@ class Match:
         self.__screen.print_captured_pieces(self.board.get_captured_pieces_by_color(
             "white"), self.board.get_captured_pieces_by_color("black"))
 
+        # REMOVE BEFORE DEPLOY
+        self.__screen.print_in_game_pieces(self.board.get_pieces_in_game_by_color(
+            "white"), self.board.get_pieces_in_game_by_color("black"))
+
+
+        pieces_atacking_player_king = self.board.verify_check(player.color)
+
+        if len(pieces_atacking_player_king) > 0:
+            self.__check_turn(player, pieces_atacking_player_king)
+            return
+
+        self.__normal_turn(player)
+
+
+        if player.color == "black":
+            self.__turn += 1
+            self.__white_plays = True
+        else:
+            self.__white_plays = False
+
+    def __normal_turn(self, player: Player):
         selected_piece = self.__screen.get_piece_to_be_moved(player.color)
 
         self.__screen.clear_console()
@@ -60,8 +83,5 @@ class Match:
         self.__screen.clear_console()
         self.__screen.print_board()
 
-        if player.color == "black":
-            self.__turn += 1
-            self.__white_plays = True
-        else:
-            self.__white_plays = False
+    def __check_turn(self, player: Player, enemy_pieces: list):
+        pass

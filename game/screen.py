@@ -60,6 +60,16 @@ class Screen:
             self.__print_piece(black_piece)
         print()
 
+    def print_in_game_pieces(self, white_pieces: list, black_pieces: list) -> None:
+        print("Peças brancas em jogo: ", end='')
+        for white_piece in white_pieces:
+            self.__print_piece(white_piece)
+        print()
+        print("Peças pretas em jogo: ", end='')
+        for black_piece in black_pieces:
+            self.__print_piece(black_piece)
+        print()
+
     def clear_console(self) -> None:
         os.system('cls' if os.name == 'nt' else 'clear')
 
