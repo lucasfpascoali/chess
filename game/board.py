@@ -110,7 +110,6 @@ class Board:
 
     def verify_mate(self, color: str, enemy_pieces_atacking: list[Piece]) -> bool:
         player_king = self.get_king_by_color(color)
-        enemy_color = "white" if color == "black" else "black"
         for enemy_piece in enemy_pieces_atacking:
             if len(enemy_piece.houses_to_enemy_king) > 0:
                 return False

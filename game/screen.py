@@ -71,6 +71,10 @@ class Screen:
             self.__print_piece(black_piece)
         print()
 
+    def print_check_message(self):
+        print("ATENÇÃO!!! Você está em cheque!!!")
+        print("Seu próximo movimento está limitado ao seu rei ou, se possível, peças que possam bloquear o cheque")
+
     def clear_console(self) -> None:
         os.system('cls' if os.name == 'nt' else 'clear')
 
@@ -84,6 +88,23 @@ class Screen:
                         "A posição digitada não contém uma peça da sua cor!")
 
                 return self.board.get_piece_by_position(player_input)
+
+            except Exception as e:
+                print(str(e))
+
+    def get_piece_to_be_moved_on_check(self, player_color: str, possible_moves: list[Position]) -> Piece:
+        while True:
+            try:
+                selected_piece = self.get_piece_to_be_moved(player_color)
+                if selected_piece.sign == 'K':
+                    return selected_piece
+
+                pieces_moves = selected_piece.possible_moves()
+                for possible_move in possible_moves:
+                    if pieces_moves[possible_move.x][possible_move.y]:
+                        return selected_piece
+
+                raise Exception("A peça escolhida não pode evitar o cheque!")
 
             except Exception as e:
                 print(str(e))

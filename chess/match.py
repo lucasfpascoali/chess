@@ -61,7 +61,7 @@ class Match:
         else:
             self.__normal_turn(player)
 
-        if player.color == "black":
+        if player.color == "black" and not self.__game_over:
             self.__turn += 1
             self.__white_plays = True
         else:
@@ -81,4 +81,28 @@ class Match:
         self.__screen.print_board()
 
     def __check_turn(self, player: Player, enemy_pieces: list[Piece]):
-        self.board.verify_mate(player.color, enemy_pieces)
+        if self.board.verify_mate(player.color, enemy_pieces):
+            self.__game_over == True
+            return
+
+        possible_moves_to_block = []
+
+        # If two pieces are atacking the king
+        # or the piece is a knight, you cant block the check
+        if len(enemy_pieces) == 1 and enemy_pieces[0].sign != 'N':
+            possible_moves_to_block = enemy_pieces[0].houses_to_enemy_king()
+
+        self.__screen.print_check_message()
+
+        selected_piece = self.__screen.get_piece_to_be_moved_on_check(
+            player.color, possible_moves_to_block)
+
+        self.__screen.clear_console()
+        self.__screen.print_selected_piece_moves(selected_piece)
+
+        next_position = self.__screen.get_piece_next_position(selected_piece)
+
+        self.board.move_piece(selected_piece, next_position)
+
+        self.__screen.clear_console()
+        self.__screen.print_board()
