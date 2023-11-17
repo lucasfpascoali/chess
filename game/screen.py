@@ -1,3 +1,4 @@
+from xml.etree.ElementTree import PI
 from colorama import init as colorama_init
 from colorama import Fore, Back, Style
 from game.board import Board
@@ -50,7 +51,7 @@ class Screen:
         print("A posição selecionada não contém uma peça da sua cor!")
         print("Digite outra posição!")
 
-    def print_captured_pieces(self, white_pieces: list, black_pieces: list) -> None:
+    def print_captured_pieces(self, white_pieces: list[Piece], black_pieces: list[Piece]) -> None:
         print("Peças brancas capturadas: ", end='')
         for white_piece in white_pieces:
             self.__print_piece(white_piece)
@@ -60,7 +61,7 @@ class Screen:
             self.__print_piece(black_piece)
         print()
 
-    def print_in_game_pieces(self, white_pieces: list, black_pieces: list) -> None:
+    def print_in_game_pieces(self, white_pieces: list[Piece], black_pieces: list[Piece]) -> None:
         print("Peças brancas em jogo: ", end='')
         for white_piece in white_pieces:
             self.__print_piece(white_piece)
@@ -101,7 +102,7 @@ class Screen:
             except Exception as e:
                 print(str(e))
 
-    def __print_piece(self, piece: Piece | None) -> None:
+    def __print_piece(self, piece: Piece) -> None:
         if piece == None:
             print("_ ", end='')
         elif piece.color == 'white':

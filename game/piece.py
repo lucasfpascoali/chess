@@ -34,9 +34,9 @@ class Piece(ABC):
         return self.possible_moves()[position.x][position.y]
 
     @abstractmethod
-    def possible_moves(self) -> list:
+    def possible_moves(self) -> list[list[bool]]:
         pass
 
     @abstractmethod
-    def houses_to_enemy_king(self) -> list:
+    def houses_to_enemy_king(self) -> list[Position]:
         pass

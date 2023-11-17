@@ -43,3 +43,6 @@ class Knight(Piece):
             possible_moves[x + 1][y - 2] = True
 
         return possible_moves
+
+    def houses_to_enemy_king(self) -> list:
+        return []

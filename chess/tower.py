@@ -8,7 +8,7 @@ class Tower(Piece):
     def __init__(self, color: str, position: Position, board: Board):
         super().__init__(color, position, board, "R")
 
-    def possible_moves(self) -> list:
+    def possible_moves(self) -> list[list[bool]]:
         possible_moves = []
         for row in range(0, self.board.rows):
             possible_moves.append([])
@@ -55,3 +55,23 @@ class Tower(Piece):
                 break
 
         return possible_moves
+
+    def houses_to_enemy_king(self) -> list[Position]:
+        enemy_color = "white" if self.color == "black" else "black"
+        enemy_king = self.board.get_king_by_color(enemy_color)
+
+        houses_to_enemy_king = []
+        # enemy king on same row
+        if enemy_king.position.y == self.position.y:
+            start = min(enemy_king.position.y, self.position.y) + 1
+            end = max(enemy_king.position.y, self.position.y)
+            for square in range(start, end):
+                houses_to_enemy_king.append(Position(square, self.position.y))
+
+        if enemy_king.position.x == self.position.x:
+            start = min(enemy_king.position.x, self.position.x) + 1
+            end = max(enemy_king.position.x, self.position.x)
+            for square in range(start, end):
+                houses_to_enemy_king.append(Position(self.position.x, square))
+
+        return houses_to_enemy_king

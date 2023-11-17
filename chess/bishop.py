@@ -8,7 +8,7 @@ class Bishop(Piece):
     def __init__(self, color: str, position: Position, board: Board):
         super().__init__(color, position, board, 'B')
 
-    def possible_moves(self) -> list:
+    def possible_moves(self) -> list[list[bool]]:
         possible_moves = []
         for row in range(0, self.board.rows):
             possible_moves.append([])
@@ -53,7 +53,7 @@ class Bishop(Piece):
 
         return possible_moves
 
-    def houses_to_enemy_king(self) -> list:
+    def houses_to_enemy_king(self) -> list[Position]:
         enemy_color = "white" if self.color == "black" else "black"
         enemy_king = self.board.get_king_by_color(enemy_color)
 

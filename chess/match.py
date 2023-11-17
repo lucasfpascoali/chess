@@ -22,7 +22,7 @@ class Match:
         self.board = Board()
         self.__screen = Screen(self.board)
 
-    def start_match(self):
+    def start_match(self) -> None:
         self.board.add_piece(King("black", Position(7, 4),
                                   self.board), Position(7, 4))
         self.board.add_piece(King("white", Position(0, 4),
@@ -42,7 +42,7 @@ class Match:
             self.__play_turn(
                 self.__players[0] if self.__white_plays else self.__players[1])
 
-    def __play_turn(self, player: Player):
+    def __play_turn(self, player: Player) -> None:
         self.__screen.clear_console()
 
         self.__screen.print_turn(self.__turn, player.color == "white")
@@ -54,7 +54,6 @@ class Match:
         self.__screen.print_in_game_pieces(self.board.get_pieces_in_game_by_color(
             "white"), self.board.get_pieces_in_game_by_color("black"))
 
-
         pieces_atacking_player_king = self.board.verify_check(player.color)
 
         if len(pieces_atacking_player_king) > 0:
@@ -63,14 +62,13 @@ class Match:
 
         self.__normal_turn(player)
 
-
         if player.color == "black":
             self.__turn += 1
             self.__white_plays = True
         else:
             self.__white_plays = False
 
-    def __normal_turn(self, player: Player):
+    def __normal_turn(self, player: Player) -> None:
         selected_piece = self.__screen.get_piece_to_be_moved(player.color)
 
         self.__screen.clear_console()
@@ -83,5 +81,5 @@ class Match:
         self.__screen.clear_console()
         self.__screen.print_board()
 
-    def __check_turn(self, player: Player, enemy_pieces: list):
+    def __check_turn(self, player: Player, enemy_pieces: list[Piece]):
         pass

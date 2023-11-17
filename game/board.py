@@ -65,33 +65,34 @@ class Board:
 
     def move_piece(self, piece: Piece, next_position: Position) -> None:
         if self.__board[next_position.x][next_position.y] != None:
-            self.add_captured_piece(self.get_piece_by_position(next_position))
+            self.add_captured_piece(self.get_piece_by_position(
+                next_position))  # type: ignore
 
         self.__board[piece.position.x][piece.position.y] = None
         piece.change_position(next_position)
         self.__board[next_position.x][next_position.y] = piece
 
-    def add_piece(self, piece: Piece, position: Position):
+    def add_piece(self, piece: Piece, position: Position) -> None:
         self.__board[position.x][position.y] = piece
         self.__pieces_in_game[piece.color].append(piece)
 
-    def add_captured_piece(self, piece: Piece):
+    def add_captured_piece(self, piece: Piece) -> None:
         self.__captured_pieces[piece.color].append(piece)
         self.__pieces_in_game[piece.color].remove(piece)
 
-    def get_captured_pieces_by_color(self, color: str) -> list:
+    def get_captured_pieces_by_color(self, color: str) -> list[Piece]:
         return self.__captured_pieces[color]
 
-    def get_all_captured_pieces(self) -> list:
+    def get_all_captured_pieces(self) -> list[Piece]:
         return [*self.__captured_pieces["white"], *self.__captured_pieces["black"]]
 
-    def get_pieces_in_game_by_color(self, color: str) -> list:
+    def get_pieces_in_game_by_color(self, color: str) -> list[Piece]:
         return self.__pieces_in_game[color]
 
-    def get_all_pieces_in_game(self) -> list:
+    def get_all_pieces_in_game(self) -> list[Piece]:
         return [*self.__pieces_in_game["white"], *self.__pieces_in_game["black"]]
 
-    def verify_check(self, color) -> list:
+    def verify_check(self, color) -> list[Piece]:
         player_king = self.get_king_by_color(color)
         enemy_color = "white" if color == "black" else "black"
         enemy_pieces_atacking = []
