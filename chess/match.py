@@ -58,9 +58,8 @@ class Match:
 
         if len(pieces_atacking_player_king) > 0:
             self.__check_turn(player, pieces_atacking_player_king)
-            return
-
-        self.__normal_turn(player)
+        else:
+            self.__normal_turn(player)
 
         if player.color == "black":
             self.__turn += 1
@@ -82,4 +81,4 @@ class Match:
         self.__screen.print_board()
 
     def __check_turn(self, player: Player, enemy_pieces: list[Piece]):
-        pass
+        self.board.verify_mate(player.color, enemy_pieces)

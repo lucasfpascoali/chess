@@ -92,7 +92,12 @@ class Board:
     def get_all_pieces_in_game(self) -> list[Piece]:
         return [*self.__pieces_in_game["white"], *self.__pieces_in_game["black"]]
 
-    def verify_check(self, color) -> list[Piece]:
+    def get_king_by_color(self, color: str) -> Piece:
+        for piece in self.__pieces_in_game[color]:
+            if piece.sign == 'K':
+                return piece
+
+    def verify_check(self, color: str) -> list[Piece]:
         player_king = self.get_king_by_color(color)
         enemy_color = "white" if color == "black" else "black"
         enemy_pieces_atacking = []
@@ -103,7 +108,14 @@ class Board:
 
         return enemy_pieces_atacking
 
-    def get_king_by_color(self, color: str) -> Piece:
-        for piece in self.__pieces_in_game[color]:
-            if piece.sign == 'K':
-                return piece
+    def verify_mate(self, color: str, enemy_pieces_atacking: list[Piece]) -> bool:
+        player_king = self.get_king_by_color(color)
+        enemy_color = "white" if color == "black" else "black"
+        for enemy_piece in enemy_pieces_atacking:
+            if len(enemy_piece.houses_to_enemy_king) > 0:
+                return False
+
+        if len(player_king.possible_moves) > 0:
+            return False
+
+        return True
