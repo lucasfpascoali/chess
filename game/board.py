@@ -1,10 +1,12 @@
 from __future__ import annotations
+from math import pi
 from typing import TYPE_CHECKING
+
 
 if TYPE_CHECKING:
     from game.piece import Piece
     from game.position import Position
-    from chess.king import King
+    from chess.pawn import Pawn
 
 
 class Board:
@@ -66,7 +68,10 @@ class Board:
     def move_piece(self, piece: Piece, next_position: Position) -> None:
         if self.__board[next_position.x][next_position.y] != None:
             self.add_captured_piece(self.get_piece_by_position(
-                next_position))  # type: ignore
+                next_position))
+
+        if type(piece) is Pawn:
+            piece.move()
 
         self.__board[piece.position.x][piece.position.y] = None
         piece.change_position(next_position)
