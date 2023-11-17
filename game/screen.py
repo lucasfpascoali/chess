@@ -71,9 +71,14 @@ class Screen:
             self.__print_piece(black_piece)
         print()
 
-    def print_check_message(self):
+    def print_check_message(self) -> None:
         print("ATENÇÃO!!! Você está em cheque!!!")
         print("Seu próximo movimento está limitado ao seu rei ou, se possível, peças que possam bloquear o cheque")
+
+    def print_game_over_message(self, white_win: bool) -> None:
+        print("CHEQUE MATE!!!")
+        print(f"As {'BRANCAS' if white_win else 'PRETAS'} venceram o jogo")
+        input("Aperte qualquer tecla para encerrar a execução do jogo: ")
 
     def clear_console(self) -> None:
         os.system('cls' if os.name == 'nt' else 'clear')

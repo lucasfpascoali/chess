@@ -42,6 +42,9 @@ class Match:
             self.__play_turn(
                 self.__players[0] if self.__white_plays else self.__players[1])
 
+        self.__screen.print_game_over_message(self.__white_plays)
+        return
+
     def __play_turn(self, player: Player) -> None:
         self.__screen.clear_console()
 
