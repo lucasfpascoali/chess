@@ -15,63 +15,50 @@ class King(Piece):
             for _ in range(0, self.board.cols):
                 possible_moves[row].append(False)
 
-        x = self.position.x
-        y = self.position.y
+        row = self.position.row
+        col = self.position.col
 
         # Up
-        new_pos = Position(x - 1, y)
+        new_pos = Position(row - 1, col)
         if self.board.valid_position(new_pos, self.color):
-            for piece in self.board.get_pieces_in_game_by_color("white" if self.color == "black" else "black"):
-                if not piece.is_atacking_pos(new_pos):
-                    possible_moves[new_pos.x][new_pos.y] = True
+            possible_moves[new_pos.row][new_pos.col] = True
 
         # Up Right
-        new_pos = Position(x - 1, y + 1)
+        new_pos = Position(row - 1, col + 1)
         if self.board.valid_position(new_pos, self.color):
-            for piece in self.board.get_pieces_in_game_by_color("white" if self.color == "black" else "black"):
-                if not piece.is_atacking_pos(new_pos):
-                    possible_moves[new_pos.x][new_pos.y] = True
+            possible_moves[new_pos.row][new_pos.col] = True
 
         # Right
-        new_pos = Position(x, y + 1)
+        new_pos = Position(row, col + 1)
         if self.board.valid_position(new_pos, self.color):
-            for piece in self.board.get_pieces_in_game_by_color("white" if self.color == "black" else "black"):
-                if not piece.is_atacking_pos(new_pos):
-                    possible_moves[new_pos.x][new_pos.y] = True
+            possible_moves[new_pos.row][new_pos.col] = True
 
         # Down Right
-        new_pos = Position(x + 1, y + 1)
+        new_pos = Position(row + 1, col + 1)
         if self.board.valid_position(new_pos, self.color):
-            for piece in self.board.get_pieces_in_game_by_color("white" if self.color == "black" else "black"):
-                if not piece.is_atacking_pos(new_pos):
-                    possible_moves[new_pos.x][new_pos.y] = True
+            possible_moves[new_pos.row][new_pos.col] = True
 
         # Down
-        new_pos = Position(x + 1, y)
+        new_pos = Position(row + 1, col)
         if self.board.valid_position(new_pos, self.color):
-            for piece in self.board.get_pieces_in_game_by_color("white" if self.color == "black" else "black"):
-                if not piece.is_atacking_pos(new_pos):
-                    possible_moves[new_pos.x][new_pos.y] = True
+            possible_moves[new_pos.row][new_pos.col] = True
 
         # Down Left
-        new_pos = Position(x + 1, y - 1)
+        new_pos = Position(row + 1, col - 1)
         if self.board.valid_position(new_pos, self.color):
-            for piece in self.board.get_pieces_in_game_by_color("white" if self.color == "black" else "black"):
-                if not piece.is_atacking_pos(new_pos):
-                    possible_moves[new_pos.x][new_pos.y] = True
+            possible_moves[new_pos.row][new_pos.col] = True
 
         # Left
-        new_pos = Position(x, y - 1)
+        new_pos = Position(row, col - 1)
         if self.board.valid_position(new_pos, self.color):
-            for piece in self.board.get_pieces_in_game_by_color("white" if self.color == "black" else "black"):
-                if not piece.is_atacking_pos(new_pos):
-                    possible_moves[new_pos.x][new_pos.y] = True
+            possible_moves[new_pos.row][new_pos.col] = True
 
         # Up Left
-        new_pos = Position(x - 1, y - 1)
+        new_pos = Position(row - 1, col - 1)
         if self.board.valid_position(new_pos, self.color):
-            for piece in self.board.get_pieces_in_game_by_color("white" if self.color == "black" else "black"):
-                if not piece.is_atacking_pos(new_pos):
-                    possible_moves[new_pos.x][new_pos.y] = True
+            possible_moves[new_pos.row][new_pos.col] = True
 
         return possible_moves
+
+    def houses_to_enemy_king(self) -> list[Position]:
+        return []

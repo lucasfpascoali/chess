@@ -15,32 +15,32 @@ class Knight(Piece):
             for _ in range(0, self.board.cols):
                 possible_moves[row].append(False)
 
-        x = self.position.x
-        y = self.position.y
+        row = self.position.row
+        col = self.position.col
 
-        if self.board.valid_position(Position(x - 2, y + 1), self.color):
-            possible_moves[x - 2][y + 1] = True
+        if self.board.valid_position(Position(row - 2, col + 1), self.color):
+            possible_moves[row - 2][col + 1] = True
 
-        if self.board.valid_position(Position(x - 2, y - 1), self.color):
-            possible_moves[x - 2][y - 1] = True
+        if self.board.valid_position(Position(row - 2, col - 1), self.color):
+            possible_moves[row - 2][col - 1] = True
 
-        if self.board.valid_position(Position(x - 1, y + 2), self.color):
-            possible_moves[x - 1][y + 2] = True
+        if self.board.valid_position(Position(row - 1, col + 2), self.color):
+            possible_moves[row - 1][col + 2] = True
 
-        if self.board.valid_position(Position(x - 1, y - 2), self.color):
-            possible_moves[x - 1][y - 2] = True
+        if self.board.valid_position(Position(row - 1, col - 2), self.color):
+            possible_moves[row - 1][col - 2] = True
 
-        if self.board.valid_position(Position(x + 2, y + 1), self.color):
-            possible_moves[x + 2][y + 1] = True
+        if self.board.valid_position(Position(row + 2, col + 1), self.color):
+            possible_moves[row + 2][col + 1] = True
 
-        if self.board.valid_position(Position(x + 2, y - 1), self.color):
-            possible_moves[x + 2][y - 1] = True
+        if self.board.valid_position(Position(row + 2, col - 1), self.color):
+            possible_moves[row + 2][col - 1] = True
 
-        if self.board.valid_position(Position(x + 1, y + 2), self.color):
-            possible_moves[x + 1][y + 2] = True
+        if self.board.valid_position(Position(row + 1, col + 2), self.color):
+            possible_moves[row + 1][col + 2] = True
 
-        if self.board.valid_position(Position(x + 1, y - 2), self.color):
-            possible_moves[x + 1][y - 2] = True
+        if self.board.valid_position(Position(row + 1, col - 2), self.color):
+            possible_moves[row + 1][col - 2] = True
 
         return possible_moves
 

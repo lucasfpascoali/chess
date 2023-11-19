@@ -43,6 +43,27 @@ class Screen:
 
         print("  a b c d e f g h")
 
+    def print_piece_moves_on_check(self, piece: Piece, possible_moves: list[list[int]]):
+        for row in range(0, self.board.rows):
+            print(f"{8 - row} ", end='')
+            for col in range(0, self.board.cols):
+                piece_on_pos = self.board.get_piece_by_position(
+                    Position(row, col))
+
+                is_possible_move = [row, col] in possible_moves
+                if is_possible_move and piece_on_pos == None:
+                    print(f"{Back.RED}x{Style.RESET_ALL} ", end='')
+                elif is_possible_move and piece_on_pos.color != piece.color:
+                    print(Back.RED, end='')
+                    self.__print_piece(piece_on_pos)
+                    print(Style.RESET_ALL, end='')
+                else:
+                    self.__print_piece(piece_on_pos)
+
+            print()
+
+        print("  a b c d e f g h")
+
     def print_turn(self, turn: int, whites_play: bool) -> None:
         print(f"Turno {turn}")
         print(f"Agora é a vez das {'brancas' if whites_play else 'pretas'}!")
@@ -90,7 +111,12 @@ class Screen:
                     "Digite a posição da peça a ser movida: ")
                 if not self.board.valid_piece(player_input, player_color):
                     raise Exception(
-                        "A posição digitada não contém uma peça da sua cor!")
+                        "A posição digitada não contém uma peça da sua cor!"
+                    )
+                elif not self.board.get_piece_by_position(player_input).have_possible_move():
+                    raise Exception(
+                        "A peça escolhida não tem movimentos possíveis!"
+                    )
 
                 return self.board.get_piece_by_position(player_input)
 
@@ -106,7 +132,7 @@ class Screen:
 
                 pieces_moves = selected_piece.possible_moves()
                 for possible_move in possible_moves:
-                    if pieces_moves[possible_move.x][possible_move.y]:
+                    if pieces_moves[possible_move.row][possible_move.col]:
                         return selected_piece
 
                 raise Exception("A peça escolhida não pode evitar o cheque!")
@@ -120,9 +146,23 @@ class Screen:
                 player_input = self.__get_input(
                     "Digite a posição que você quer que a peça vá:")
 
-                if not piece.possible_moves()[player_input.x][player_input.y]:
+                if not piece.possible_moves()[player_input.row][player_input.col]:
                     raise Exception(
-                        "A sua peça não pode se mover para essa direção")
+                        "A sua peça não pode se mover para essa posição!")
+
+                return player_input
+            except Exception as e:
+                print(str(e))
+
+    def get_piece_next_position_on_check(self, piece: Piece, possible_positions: list[list[int]]) -> Position:
+        while True:
+            try:
+                player_input = self.__get_input(
+                    "Digite a posição que você quer que a peça vá:")
+
+                if not [player_input.row, player_input.col] in possible_positions:
+                    raise Exception(
+                        "A sua peça não pode cobrir o cheque nesta posição!")
 
                 return player_input
             except Exception as e:

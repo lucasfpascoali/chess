@@ -34,16 +34,16 @@ class Board:
         return self.__cols
 
     def get_piece_by_position(self, position: Position) -> (None | Piece):
-        return self.__board[position.x][position.y]
+        return self.__board[position.row][position.col]
 
     def position_has_piece(self, position: Position) -> bool:
         return self.get_piece_by_position(position) != None
 
     def valid_piece(self, position: Position, color: str) -> bool:
-        if position.x < 0 or position.x >= self.__rows:
+        if position.row < 0 or position.row >= self.__rows:
             return False
 
-        if position.y < 0 or position.y >= self.__cols:
+        if position.col < 0 or position.col >= self.__cols:
             return False
 
         piece_in_pos = self.get_piece_by_position(position)
@@ -53,10 +53,10 @@ class Board:
         return True
 
     def valid_position(self, position: Position, color: str) -> bool:
-        if position.x < 0 or position.x >= self.__rows:
+        if position.row < 0 or position.row >= self.__rows:
             return False
 
-        if position.y < 0 or position.y >= self.__cols:
+        if position.col < 0 or position.col >= self.__cols:
             return False
 
         piece_in_pos = self.get_piece_by_position(position)
@@ -66,20 +66,16 @@ class Board:
         return True
 
     def move_piece(self, piece: Piece, next_position: Position) -> None:
-        if self.__board[next_position.x][next_position.y] != None:
+        if self.__board[next_position.row][next_position.col] != None:
             self.add_captured_piece(self.get_piece_by_position(
                 next_position))
 
-        if type(piece) is Pawn:
+        if piece.sign == 'P':
             piece.move()
 
-        self.__board[piece.position.x][piece.position.y] = None
+        self.__board[piece.position.row][piece.position.col] = None
         piece.change_position(next_position)
-        self.__board[next_position.x][next_position.y] = piece
-
-    def add_piece(self, piece: Piece, position: Position) -> None:
-        self.__board[position.x][position.y] = piece
-        self.__pieces_in_game[piece.color].append(piece)
+        self.__board[next_position.row][next_position.col] = piece
 
     def add_captured_piece(self, piece: Piece) -> None:
         self.__captured_pieces[piece.color].append(piece)
@@ -116,10 +112,14 @@ class Board:
     def verify_mate(self, color: str, enemy_pieces_atacking: list[Piece]) -> bool:
         player_king = self.get_king_by_color(color)
         for enemy_piece in enemy_pieces_atacking:
-            if len(enemy_piece.houses_to_enemy_king) > 0:
+            if len(enemy_piece.houses_to_enemy_king()) > 0:
                 return False
 
-        if len(player_king.possible_moves) > 0:
+        if len(player_king.possible_moves()) > 0:
             return False
 
         return True
+
+    def add_piece(self, piece: Piece) -> None:
+        self.__board[piece.position.row][piece.position.col] = piece
+        self.__pieces_in_game[piece.color].append(piece)

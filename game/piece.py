@@ -27,12 +27,6 @@ class Piece(ABC):
     def sign(self) -> str:
         return self.__sign
 
-    def change_position(self, position: Position):
-        self.__position = position
-
-    def is_atacking_pos(self, position: Position) -> bool:
-        return self.possible_moves()[position.x][position.y]
-
     @abstractmethod
     def possible_moves(self) -> list[list[bool]]:
         pass
@@ -40,3 +34,21 @@ class Piece(ABC):
     @abstractmethod
     def houses_to_enemy_king(self) -> list[Position]:
         pass
+
+    def change_position(self, position: Position):
+        self.__position = position
+
+    def is_atacking_pos(self, position: Position) -> bool:
+        if type(self) is 'Pawn' and position.col == self.position.col:
+            return False
+
+        return self.possible_moves()[position.row][position.col]
+
+    def have_possible_move(self) -> bool:
+        possible_moves = self.possible_moves()
+
+        for row in possible_moves:
+            if True in row:
+                return True
+
+        return False

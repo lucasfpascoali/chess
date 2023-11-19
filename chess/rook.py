@@ -4,7 +4,7 @@ from game.position import Position
 from game.board import Board
 
 
-class Tower(Piece):
+class Rook(Piece):
     def __init__(self, color: str, position: Position, board: Board):
         super().__init__(color, position, board, "R")
 
@@ -15,41 +15,41 @@ class Tower(Piece):
             for _ in range(0, self.board.cols):
                 possible_moves[row].append(False)
 
-        x = self.position.x
-        y = self.position.y
+        row = self.position.row
+        col = self.position.col
 
         # Calculating possible moves to left
-        for square in range(y - 1, -1, -1):
-            pos = Position(x, square)
+        for square in range(col - 1, -1, -1):
+            pos = Position(row, square)
             if self.board.valid_position(pos, self.color):
-                possible_moves[x][square] = True
+                possible_moves[row][square] = True
 
             if self.board.position_has_piece(pos):
                 break
 
         # Calculating possible moves to right
-        for square in range(y + 1, self.board.cols):
-            pos = Position(x, square)
+        for square in range(col + 1, self.board.cols):
+            pos = Position(row, square)
             if self.board.valid_position(pos, self.color):
-                possible_moves[x][square] = True
+                possible_moves[row][square] = True
 
             if self.board.position_has_piece(pos):
                 break
 
         # Calculating possible moves to up
-        for square in range(x - 1, -1, -1):
-            pos = Position(square, y)
+        for square in range(row - 1, -1, -1):
+            pos = Position(square, col)
             if self.board.valid_position(pos, self.color):
-                possible_moves[square][y] = True
+                possible_moves[square][col] = True
 
             if self.board.position_has_piece(pos):
                 break
 
         # Calculating possible moves to down
-        for square in range(x + 1, self.board.rows):
-            pos = Position(square, y)
+        for square in range(row + 1, self.board.rows):
+            pos = Position(square, col)
             if self.board.valid_position(pos, self.color):
-                possible_moves[square][y] = True
+                possible_moves[square][col] = True
 
             if self.board.position_has_piece(pos):
                 break
@@ -62,16 +62,18 @@ class Tower(Piece):
 
         houses_to_enemy_king = []
         # enemy king on same row
-        if enemy_king.position.y == self.position.y:
-            start = min(enemy_king.position.y, self.position.y) + 1
-            end = max(enemy_king.position.y, self.position.y)
+        if enemy_king.position.col == self.position.col:
+            start = min(enemy_king.position.col, self.position.col) + 1
+            end = max(enemy_king.position.col, self.position.col)
             for square in range(start, end):
-                houses_to_enemy_king.append(Position(square, self.position.y))
+                houses_to_enemy_king.append(
+                    Position(square, self.position.col))
 
-        if enemy_king.position.x == self.position.x:
-            start = min(enemy_king.position.x, self.position.x) + 1
-            end = max(enemy_king.position.x, self.position.x)
+        if enemy_king.position.row == self.position.row:
+            start = min(enemy_king.position.row, self.position.row) + 1
+            end = max(enemy_king.position.row, self.position.row)
             for square in range(start, end):
-                houses_to_enemy_king.append(Position(self.position.x, square))
+                houses_to_enemy_king.append(
+                    Position(self.position.row, square))
 
         return houses_to_enemy_king

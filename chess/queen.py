@@ -15,41 +15,41 @@ class Queen(Piece):
             for _ in range(0, self.board.cols):
                 possible_moves[row].append(False)
 
-        x = self.position.x
-        y = self.position.y
+        row = self.position.row
+        col = self.position.col
 
         # Calculating possible moves to left
-        for square in range(y - 1, -1, -1):
-            pos = Position(x, square)
+        for square in range(col - 1, -1, -1):
+            pos = Position(row, square)
             if self.board.valid_position(pos, self.color):
-                possible_moves[x][square] = True
+                possible_moves[row][square] = True
 
             if self.board.position_has_piece(pos):
                 break
 
         # Calculating possible moves to right
-        for square in range(y + 1, self.board.cols):
-            pos = Position(x, square)
+        for square in range(col + 1, self.board.cols):
+            pos = Position(row, square)
             if self.board.valid_position(pos, self.color):
-                possible_moves[x][square] = True
+                possible_moves[row][square] = True
 
             if self.board.position_has_piece(pos):
                 break
 
         # Calculating possible moves to up
-        for square in range(x - 1, -1, -1):
-            pos = Position(square, y)
+        for square in range(row - 1, -1, -1):
+            pos = Position(square, col)
             if self.board.valid_position(pos, self.color):
-                possible_moves[square][y] = True
+                possible_moves[square][col] = True
 
             if self.board.position_has_piece(pos):
                 break
 
         # Calculating possible moves to down
-        for square in range(x + 1, self.board.rows):
-            pos = Position(square, y)
+        for square in range(row + 1, self.board.rows):
+            pos = Position(square, col)
             if self.board.valid_position(pos, self.color):
-                possible_moves[square][y] = True
+                possible_moves[square][col] = True
 
             if self.board.position_has_piece(pos):
                 break
@@ -60,27 +60,27 @@ class Queen(Piece):
         upLeftBreak = False
         # Calculating all diagonals in just one loop :)
         for square in range(1, 8):
-            pos = Position(x + square, y + square)
+            pos = Position(row + square, col + square)
             if self.board.valid_position(pos, self.color) and not downRightBreak:
-                possible_moves[x + square][y + square] = True
+                possible_moves[row + square][col + square] = True
                 if self.board.position_has_piece(pos):
                     downRightBreak = True
 
-            pos = Position(x + square, y - square)
+            pos = Position(row + square, col - square)
             if self.board.valid_position(pos, self.color) and not downLeftBreak:
-                possible_moves[x + square][y - square] = True
+                possible_moves[row + square][col - square] = True
                 if self.board.position_has_piece(pos):
                     downLeftBreak = True
 
-            pos = Position(x - square, y + square)
+            pos = Position(row - square, col + square)
             if self.board.valid_position(pos, self.color) and not upRightBreak:
-                possible_moves[x - square][y + square] = True
+                possible_moves[row - square][col + square] = True
                 if self.board.position_has_piece(pos):
                     upRightBreak = True
 
-            pos = Position(x - square, y - square)
+            pos = Position(row - square, col - square)
             if self.board.valid_position(pos, self.color) and not upLeftBreak:
-                possible_moves[x - square][y - square] = True
+                possible_moves[row - square][col - square] = True
                 if self.board.position_has_piece(pos):
                     upLeftBreak = True
 
@@ -95,62 +95,64 @@ class Queen(Piece):
 
         houses_to_enemy_king = []
         # enemy king on same row
-        if enemy_king.position.y == self.position.y:
-            start = min(enemy_king.position.y, self.position.y) + 1
-            end = max(enemy_king.position.y, self.position.y)
+        if enemy_king.position.col == self.position.col:
+            start = min(enemy_king.position.col, self.position.col) + 1
+            end = max(enemy_king.position.col, self.position.col)
             for square in range(start, end):
-                houses_to_enemy_king.append(Position(square, self.position.y))
+                houses_to_enemy_king.append(
+                    Position(square, self.position.col))
 
             return houses_to_enemy_king
 
-        if enemy_king.position.x == self.position.x:
-            start = min(enemy_king.position.x, self.position.x) + 1
-            end = max(enemy_king.position.x, self.position.x)
+        if enemy_king.position.row == self.position.row:
+            start = min(enemy_king.position.row, self.position.row) + 1
+            end = max(enemy_king.position.row, self.position.row)
             for square in range(start, end):
-                houses_to_enemy_king.append(Position(self.position.x, square))
+                houses_to_enemy_king.append(
+                    Position(self.position.row, square))
 
             return houses_to_enemy_king
 
         # Enemy king is on the up left diagonal
-        if enemy_king.position.x < self.position.x and enemy_king.position.y < self.position.y:
+        if enemy_king.position.row < self.position.row and enemy_king.position.col < self.position.col:
             for square in range(1, 8):
-                if enemy_king.position.x == self.position.x - square and enemy_king.position.y == self.position.y - square:
+                if enemy_king.position.row == self.position.row - square and enemy_king.position.col == self.position.col - square:
                     break
 
                 houses_to_enemy_king.append(
-                    Position(self.position.x - square, self.position.y - square))
+                    Position(self.position.row - square, self.position.col - square))
 
             return houses_to_enemy_king
 
         # Enemy king is on the up right diagonal
-        if enemy_king.position.x > self.position.x and enemy_king.position.y < self.position.y:
+        if enemy_king.position.row > self.position.row and enemy_king.position.col < self.position.col:
             for square in range(1, 8):
-                if enemy_king.position.x == self.position.x + square and enemy_king.position.y == self.position.y - square:
+                if enemy_king.position.row == self.position.row + square and enemy_king.position.col == self.position.col - square:
                     break
 
                 houses_to_enemy_king.append(
-                    Position(self.position.x + square, self.position.y - square))
+                    Position(self.position.row + square, self.position.col - square))
 
             return houses_to_enemy_king
 
         # Enemy king is on the down left diagonal
-        if enemy_king.position.x < self.position.x and enemy_king.position.y > self.position.y:
+        if enemy_king.position.row < self.position.row and enemy_king.position.col > self.position.col:
             for square in range(1, 8):
-                if enemy_king.position.x == self.position.x - square and enemy_king.position.y == self.position.y + square:
+                if enemy_king.position.row == self.position.row - square and enemy_king.position.col == self.position.col + square:
                     break
 
                 houses_to_enemy_king.append(
-                    Position(self.position.x - square, self.position.y + square))
+                    Position(self.position.row - square, self.position.col + square))
 
             return houses_to_enemy_king
 
         # Enemy king is on the down right diagonal
-        if enemy_king.position.x > self.position.x and enemy_king.position.y > self.position.y:
+        if enemy_king.position.row > self.position.row and enemy_king.position.col > self.position.col:
             for square in range(1, 8):
-                if enemy_king.position.x == self.position.x + square and enemy_king.position.y == self.position.y + square:
+                if enemy_king.position.row == self.position.row + square and enemy_king.position.col == self.position.col + square:
                     break
 
                 houses_to_enemy_king.append(
-                    Position(self.position.x + square, self.position.y + square))
+                    Position(self.position.row + square, self.position.col + square))
 
             return houses_to_enemy_king
