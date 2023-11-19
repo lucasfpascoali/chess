@@ -24,13 +24,13 @@ class Pawn(Piece):
 
         # Pawn can only go straight, so we need to know what direction its looking
         increment = -1 if self.color == "white" else 1
-        if self.board.valid_position(Position(self.position.row + increment, self.position.col), self.color):
+        if not self.board.position_has_piece(Position(self.position.row + increment, self.position.col)) and self.board.valid_position(Position(self.position.row + increment, self.position.col), self.color):
             possible_moves[self.position.row +
                            increment][self.position.col] = True
 
         # Pawn first move can be 2 houses
         if self.__move_counter == 0 and self.board.valid_position(Position(self.position.row + (
-                increment * 2), self.position.col), self.color):
+                increment * 2), self.position.col), self.color) and not self.board.position_has_piece(Position(self.position.row + (increment * 2), self.position.col)):
             possible_moves[self.position.row + (
                 increment * 2)][self.position.col] = True
 

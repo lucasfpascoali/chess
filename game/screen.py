@@ -98,8 +98,8 @@ class Screen:
 
     def print_game_over_message(self, white_win: bool) -> None:
         print("CHEQUE MATE!!!")
-        print(f"As {'BRANCAS' if white_win else 'PRETAS'} venceram o jogo")
-        input("Aperte qualquer tecla para encerrar a execução do jogo: ")
+        print(f"As {'BRANCAS' if white_win else 'PRETAS'} venceram o jogo!")
+        input("Aperte enter para encerrar a execução do jogo...")
 
     def clear_console(self) -> None:
         os.system('cls' if os.name == 'nt' else 'clear')

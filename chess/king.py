@@ -18,45 +18,31 @@ class King(Piece):
         row = self.position.row
         col = self.position.col
 
-        # Up
-        new_pos = Position(row - 1, col)
-        if self.board.valid_position(new_pos, self.color):
-            possible_moves[new_pos.row][new_pos.col] = True
+        # Listing all the 8 houses king can go
+        all_king_moves = [
+            Position(row - 1, col),
+            Position(row - 1, col + 1),
+            Position(row, col + 1),
+            Position(row + 1, col + 1),
+            Position(row + 1, col),
+            Position(row + 1, col - 1),
+            Position(row, col - 1),
+            Position(row - 1, col - 1)
+        ]
 
-        # Up Right
-        new_pos = Position(row - 1, col + 1)
-        if self.board.valid_position(new_pos, self.color):
-            possible_moves[new_pos.row][new_pos.col] = True
+        # Removing the houses that are under attack
+        for piece in self.board.get_pieces_in_game_by_color("white" if self.color == "black" else "black"):
+            for move in all_king_moves:
+                if self.board.valid_position(move, self.color):
+                    all_king_moves.remove(move)
+                    continue
 
-        # Right
-        new_pos = Position(row, col + 1)
-        if self.board.valid_position(new_pos, self.color):
-            possible_moves[new_pos.row][new_pos.col] = True
+                if self.board.valid_position(move, self.color) and piece.is_atacking_pos(move):
+                    all_king_moves.remove(move)
 
-        # Down Right
-        new_pos = Position(row + 1, col + 1)
-        if self.board.valid_position(new_pos, self.color):
-            possible_moves[new_pos.row][new_pos.col] = True
-
-        # Down
-        new_pos = Position(row + 1, col)
-        if self.board.valid_position(new_pos, self.color):
-            possible_moves[new_pos.row][new_pos.col] = True
-
-        # Down Left
-        new_pos = Position(row + 1, col - 1)
-        if self.board.valid_position(new_pos, self.color):
-            possible_moves[new_pos.row][new_pos.col] = True
-
-        # Left
-        new_pos = Position(row, col - 1)
-        if self.board.valid_position(new_pos, self.color):
-            possible_moves[new_pos.row][new_pos.col] = True
-
-        # Up Left
-        new_pos = Position(row - 1, col - 1)
-        if self.board.valid_position(new_pos, self.color):
-            possible_moves[new_pos.row][new_pos.col] = True
+        for move in all_king_moves:
+            if self.board.valid_position(move, self.color):
+                possible_moves[move.row][move.col] = True
 
         return possible_moves
 

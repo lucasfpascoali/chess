@@ -131,13 +131,24 @@ class Board:
 
         return enemy_pieces_atacking
 
-    def verify_mate(self, color: str, enemy_pieces_atacking: list[Piece]) -> bool:
+    def verify_mate(self, color: str, enemy_pieces: list[Piece]) -> bool:
         player_king = self.get_king_by_color(color)
-        for enemy_piece in enemy_pieces_atacking:
-            if len(enemy_piece.houses_to_enemy_king()) > 0:
-                return False
 
-        if len(player_king.possible_moves()) > 0:
+        houses_to_block = []
+        if len(enemy_pieces) == 1 and enemy_pieces[0].sign != 'N':
+            houses_to_block = [
+                enemy_pieces[0].position, *enemy_pieces[0].houses_to_enemy_king()]
+
+        for player_piece in self.get_pieces_in_game_by_color(color):
+            if player_piece.sign == 'K':
+                continue
+
+            piece_moves = player_piece.possible_moves()
+            for house in houses_to_block:
+                if piece_moves[house.row][house.col]:
+                    return False
+
+        if player_king.have_possible_move():
             return False
 
         return True

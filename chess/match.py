@@ -32,7 +32,7 @@ class Match:
             self.__play_turn(
                 self.__players[0] if self.__white_plays else self.__players[1])
 
-        self.__screen.print_game_over_message(self.__white_plays)
+        self.__screen.print_game_over_message(not self.__white_plays)
         return
 
     def __setup_board(self) -> None:
@@ -70,10 +70,6 @@ class Match:
         self.__screen.print_board()
         self.__screen.print_captured_pieces(self.board.get_captured_pieces_by_color(
             "white"), self.board.get_captured_pieces_by_color("black"))
-
-        # REMOVE BEFORE DEPLOY
-        self.__screen.print_in_game_pieces(self.board.get_pieces_in_game_by_color(
-            "white"), self.board.get_pieces_in_game_by_color("black"))
 
         pieces_atacking_player_king = self.board.verify_check(player.color)
 
@@ -114,7 +110,7 @@ class Match:
 
     def __check_turn(self, player: Player, enemy_pieces: list[Piece]):
         if self.board.verify_mate(player.color, enemy_pieces):
-            self.__game_over == True
+            self.__game_over = True
             return
 
         possible_moves_to_block = []
