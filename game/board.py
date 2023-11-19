@@ -66,9 +66,13 @@ class Board:
         return True
 
     def move_piece(self, piece: Piece, next_position: Position) -> None:
+        original_pos = piece.position
+
+        captured_piece = None
         if self.__board[next_position.row][next_position.col] != None:
-            self.add_captured_piece(self.get_piece_by_position(
-                next_position))
+            captured_piece = self.get_piece_by_position(
+                next_position)
+            self.add_captured_piece(captured_piece)
 
         if piece.sign == 'P':
             piece.move()
@@ -77,9 +81,27 @@ class Board:
         piece.change_position(next_position)
         self.__board[next_position.row][next_position.col] = piece
 
+        if self.verify_check(piece.color):
+            if piece.sign == 'P':
+                piece.undo_move()
+
+            self.undo_add_captured_piece(captured_piece)
+            self.__board[next_position.row][next_position.col] = captured_piece
+            piece.change_position(original_pos)
+            self.__board[original_pos.row][original_pos.col] = piece
+            raise Exception(
+                "Você não pode realizar um movimento que deixe seu rei em cheque!")
+
     def add_captured_piece(self, piece: Piece) -> None:
         self.__captured_pieces[piece.color].append(piece)
         self.__pieces_in_game[piece.color].remove(piece)
+
+    def undo_add_captured_piece(self, piece: Piece | None) -> None:
+        if piece == None:
+            return
+
+        self.__captured_pieces[piece.color].remove(piece)
+        self.__pieces_in_game[piece.color].append(piece)
 
     def get_captured_pieces_by_color(self, color: str) -> list[Piece]:
         return self.__captured_pieces[color]

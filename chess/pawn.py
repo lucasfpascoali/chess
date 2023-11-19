@@ -7,11 +7,13 @@ from game.board import Board
 class Pawn(Piece):
     def __init__(self, color: str, position: Position, board: Board):
         super().__init__(color, position, board, 'P')
-        self.__is_first_move = True
+        self.__move_counter = 0
 
     def move(self) -> None:
-        if self.__is_first_move:
-            self.__is_first_move = False
+        self.__move_counter += 1
+
+    def undo_move(self) -> None:
+        self.__move_counter -= 1
 
     def possible_moves(self) -> list[list[bool]]:
         possible_moves = []
@@ -27,7 +29,7 @@ class Pawn(Piece):
                            increment][self.position.col] = True
 
         # Pawn first move can be 2 houses
-        if self.__is_first_move and self.board.valid_position(Position(self.position.row + (
+        if self.__move_counter == 0 and self.board.valid_position(Position(self.position.row + (
                 increment * 2), self.position.col), self.color):
             possible_moves[self.position.row + (
                 increment * 2)][self.position.col] = True

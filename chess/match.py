@@ -89,17 +89,28 @@ class Match:
             self.__white_plays = False
 
     def __normal_turn(self, player: Player) -> None:
-        selected_piece = self.__screen.get_piece_to_be_moved(player.color)
+        while True:
+            try:
+                selected_piece = self.__screen.get_piece_to_be_moved(
+                    player.color)
 
-        self.__screen.clear_console()
-        self.__screen.print_selected_piece_moves(selected_piece)
+                self.__screen.clear_console()
+                self.__screen.print_selected_piece_moves(selected_piece)
 
-        next_position = self.__screen.get_piece_next_position(selected_piece)
+                next_position = self.__screen.get_piece_next_position(
+                    selected_piece)
 
-        self.board.move_piece(selected_piece, next_position)
+                self.board.move_piece(selected_piece, next_position)
 
-        self.__screen.clear_console()
-        self.__screen.print_board()
+                self.__screen.clear_console()
+                self.__screen.print_board()
+
+                break
+            except Exception as e:
+                self.__screen.clear_console()
+                self.__screen.print_turn(self.__turn, player.color == "white")
+                self.__screen.print_board()
+                print(str(e))
 
     def __check_turn(self, player: Player, enemy_pieces: list[Piece]):
         if self.board.verify_mate(player.color, enemy_pieces):
@@ -116,25 +127,35 @@ class Match:
 
         self.__screen.print_check_message()
 
-        selected_piece = self.__screen.get_piece_to_be_moved_on_check(
-            player.color, possible_moves_to_block)
+        while True:
+            try:
+                selected_piece = self.__screen.get_piece_to_be_moved_on_check(
+                    player.color, possible_moves_to_block)
 
-        selected_piece_possible_moves = selected_piece.possible_moves()
+                selected_piece_possible_moves = selected_piece.possible_moves()
 
-        intersection_pos_to_block_and_piece_moves = []
-        for pos in possible_moves_to_block:
-            if selected_piece_possible_moves[pos.row][pos.col]:
-                intersection_pos_to_block_and_piece_moves.append(
-                    [pos.row, pos.col])
+                intersection_pos_to_block_and_piece_moves = []
+                for pos in possible_moves_to_block:
+                    if selected_piece_possible_moves[pos.row][pos.col]:
+                        intersection_pos_to_block_and_piece_moves.append(
+                            [pos.row, pos.col])
 
-        self.__screen.clear_console()
-        self.__screen.print_piece_moves_on_check(
-            selected_piece, intersection_pos_to_block_and_piece_moves)
+                self.__screen.clear_console()
+                self.__screen.print_piece_moves_on_check(
+                    selected_piece, intersection_pos_to_block_and_piece_moves)
 
-        next_position = self.__screen.get_piece_next_position_on_check(
-            selected_piece, intersection_pos_to_block_and_piece_moves)
+                next_position = self.__screen.get_piece_next_position_on_check(
+                    selected_piece, intersection_pos_to_block_and_piece_moves)
 
-        self.board.move_piece(selected_piece, next_position)
+                self.board.move_piece(selected_piece, next_position)
+
+                break
+
+            except Exception as e:
+                self.__screen.clear_console()
+                self.__screen.print_turn(self.__turn, player.color == "white")
+                self.__screen.print_board()
+                print(str(e))
 
         self.__screen.clear_console()
         self.__screen.print_board()
