@@ -7,6 +7,13 @@ from game.board import Board
 class Rook(Piece):
     def __init__(self, color: str, position: Position, board: Board):
         super().__init__(color, position, board, "R")
+        self.__move_counter = 0
+
+    def move(self) -> None:
+        self.__move_counter += 1
+
+    def undo_move(self) -> None:
+        self.__move_counter -= 1
 
     def possible_moves(self) -> list[list[bool]]:
         possible_moves = []

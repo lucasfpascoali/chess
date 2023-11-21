@@ -10,10 +10,12 @@ from chess.king import King
 from chess.knight import Knight
 from chess.queen import Queen
 from chess.rook import Rook
+import sys
 
 
 class Match:
     def __init__(self):
+        sys.setrecursionlimit(1000000)
         self.__turn = 1
         self.__white_plays = True
         self.__game_over = False
@@ -71,10 +73,8 @@ class Match:
         self.__screen.print_captured_pieces(self.board.get_captured_pieces_by_color(
             "white"), self.board.get_captured_pieces_by_color("black"))
 
-        pieces_atacking_player_king = self.board.verify_check(player.color)
-
-        if len(pieces_atacking_player_king) > 0:
-            self.__check_turn(player, pieces_atacking_player_king)
+        if self.board.verify_check(player.color):
+            self.__check_turn(player)
         else:
             self.__normal_turn(player)
 
@@ -108,13 +108,20 @@ class Match:
                 self.__screen.print_board()
                 print(str(e))
 
-    def __check_turn(self, player: Player, enemy_pieces: list[Piece]):
-        if self.board.verify_mate(player.color, enemy_pieces):
+    def __check_turn(self, player: Player):
+        if self.board.verify_mate(player.color):
             self.__game_over = True
             return
 
-        possible_moves_to_block = []
+        player_king = self.board.get_king_by_color(player.color)
+        enemy_color = "white" if player.color == "black" else "black"
 
+        enemy_pieces = []
+        for piece in self.board.get_pieces_in_game_by_color(enemy_color):
+            if piece.is_atacking_pos(player_king.position):
+                enemy_pieces.append(piece)
+
+        possible_moves_to_block = []
         # If two pieces are atacking the king
         # or the piece is a knight, you cant block the check
         if len(enemy_pieces) == 1 and enemy_pieces[0].sign != 'N':
@@ -155,3 +162,13 @@ class Match:
 
         self.__screen.clear_console()
         self.__screen.print_board()
+
+    def __is_castle(self, piece: Piece, position: Position) -> bool:
+        if piece.sign != 'K':
+            return False
+
+        if piece.color == "white" and piece.position.is_equal == [7, 4] and [position.x, position.y] in [[7, 2], [7, 6]]:
+            return True
+
+        if piece.color == "black" and piece.position.is_equal == [0, 4] and [position.x, position.y] in [[0, 2], [0, 6]]:
+            return True

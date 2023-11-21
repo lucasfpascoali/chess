@@ -29,24 +29,32 @@ class Bishop(Piece):
                 possible_moves[row + square][col + square] = True
                 if self.board.position_has_piece(pos):
                     downRightBreak = True
+            else:
+                downRightBreak = True
 
             pos = Position(row + square, col - square)
             if self.board.valid_position(pos, self.color) and not downLeftBreak:
                 possible_moves[row + square][col - square] = True
                 if self.board.position_has_piece(pos):
                     downLeftBreak = True
+            else:
+                downLeftBreak = True
 
             pos = Position(row - square, col + square)
             if self.board.valid_position(pos, self.color) and not upRightBreak:
                 possible_moves[row - square][col + square] = True
                 if self.board.position_has_piece(pos):
                     upRightBreak = True
+            else:
+                upRightBreak = True
 
             pos = Position(row - square, col - square)
             if self.board.valid_position(pos, self.color) and not upLeftBreak:
                 possible_moves[row - square][col - square] = True
                 if self.board.position_has_piece(pos):
                     upLeftBreak = True
+            else:
+                upLeftBreak = True
 
             if downLeftBreak and downRightBreak and upLeftBreak and upRightBreak:
                 break

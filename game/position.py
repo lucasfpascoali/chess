@@ -10,3 +10,6 @@ class Position:
     @property
     def col(self) -> int:
         return self.__col
+
+    def is_equal(self, row: int, col: int):
+        return self.__row == row and self.__col == col

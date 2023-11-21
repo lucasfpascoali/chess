@@ -1,12 +1,9 @@
 from __future__ import annotations
-from math import pi
 from typing import TYPE_CHECKING
-
+from game.position import Position
 
 if TYPE_CHECKING:
     from game.piece import Piece
-    from game.position import Position
-    from chess.pawn import Pawn
 
 
 class Board:
@@ -16,6 +13,7 @@ class Board:
         self.__cols = cols
         self.__pieces_in_game = {"white": [], "black": []}
         self.__captured_pieces = {"white": [], "black": []}
+        self.__pieces_with_move_counter = ['K', 'P', 'R']
         for row in range(0, rows):
             self.__board.append([])
             for _ in range(0, cols):
@@ -68,29 +66,31 @@ class Board:
     def move_piece(self, piece: Piece, next_position: Position) -> None:
         original_pos = piece.position
 
-        captured_piece = None
-        if self.__board[next_position.row][next_position.col] != None:
-            captured_piece = self.get_piece_by_position(
-                next_position)
-            self.add_captured_piece(captured_piece)
+        captured_piece = self.__execute_move(piece, next_position)
 
-        if piece.sign == 'P':
+        if piece.sign in self.__pieces_with_move_counter:
             piece.move()
 
-        self.__board[piece.position.row][piece.position.col] = None
-        piece.change_position(next_position)
-        self.__board[next_position.row][next_position.col] = piece
-
         if self.verify_check(piece.color):
-            if piece.sign == 'P':
+            if piece.sign in self.__pieces_with_move_counter:
                 piece.undo_move()
 
-            self.undo_add_captured_piece(captured_piece)
-            self.__board[next_position.row][next_position.col] = captured_piece
-            piece.change_position(original_pos)
-            self.__board[original_pos.row][original_pos.col] = piece
+            self.__undo_move(piece, captured_piece,
+                             original_pos, next_position)
             raise Exception(
                 "Você não pode realizar um movimento que deixe seu rei em cheque!")
+
+    def castle_move(self, piece: Piece, next_position: Position) -> None:
+        tower = None
+        first_line = next_position.row
+        if next_position.col == 6:
+            tower = self.get_piece_by_position(Position(first_line, 7))
+            tower.change_position(Position(first_line, 5))
+        else:
+            tower = self.get_piece_by_position(Position(first_line, 0))
+            tower.change_position(Position(first_line, 3))
+
+        piece.change_position(next_position)
 
     def add_captured_piece(self, piece: Piece) -> None:
         self.__captured_pieces[piece.color].append(piece)
@@ -120,39 +120,53 @@ class Board:
             if piece.sign == 'K':
                 return piece
 
-    def verify_check(self, color: str) -> list[Piece]:
+    def verify_check(self, color: str) -> bool:
         player_king = self.get_king_by_color(color)
         enemy_color = "white" if color == "black" else "black"
-        enemy_pieces_atacking = []
 
         for piece in self.get_pieces_in_game_by_color(enemy_color):
-            if piece.is_atacking_pos(player_king.position):
-                enemy_pieces_atacking.append(piece)
+            piece_moves = piece.possible_moves()
+            if (piece_moves[player_king.position.row][player_king.position.col]):
+                return True
 
-        return enemy_pieces_atacking
+        return False
 
-    def verify_mate(self, color: str, enemy_pieces: list[Piece]) -> bool:
-        player_king = self.get_king_by_color(color)
-
-        houses_to_block = []
-        if len(enemy_pieces) == 1 and enemy_pieces[0].sign != 'N':
-            houses_to_block = [
-                enemy_pieces[0].position, *enemy_pieces[0].houses_to_enemy_king()]
-
-        for player_piece in self.get_pieces_in_game_by_color(color):
-            if player_piece.sign == 'K':
-                continue
-
-            piece_moves = player_piece.possible_moves()
-            for house in houses_to_block:
-                if piece_moves[house.row][house.col]:
-                    return False
-
-        if player_king.have_possible_move():
-            return False
+    def verify_mate(self, color: str) -> bool:
+        for piece in self.get_pieces_in_game_by_color(color):
+            piece_moves = piece.possible_moves()
+            for row in range(0, self.rows):
+                for col in range(0, self.cols):
+                    if piece_moves[row][col]:
+                        origin_pos = piece.position
+                        captured_piece = self.__execute_move(
+                            piece, Position(row, col))
+                        is_check = self.verify_check(color)
+                        self.__undo_move(piece, captured_piece,
+                                         origin_pos, Position(row, col))
+                        if not is_check:
+                            return False
 
         return True
 
     def add_piece(self, piece: Piece) -> None:
         self.__board[piece.position.row][piece.position.col] = piece
         self.__pieces_in_game[piece.color].append(piece)
+
+    def __execute_move(self, piece: Piece, target_pos: Position) -> Piece | None:
+        captured_piece = self.get_piece_by_position(target_pos)
+        if captured_piece != None:
+            self.add_captured_piece(captured_piece)
+
+        self.board[piece.position.row][piece.position.col] = None
+        piece.change_position(target_pos)
+        self.board[target_pos.row][target_pos.col] = piece
+
+        return captured_piece
+
+    def __undo_move(self, piece: Piece, captured_piece: Piece | None, original_pos: Position, target_pos) -> None:
+        piece.change_position(original_pos)
+        self.board[original_pos.row][original_pos.col] = piece
+        if captured_piece != None:
+            self.undo_add_captured_piece(captured_piece)
+
+        self.board[target_pos.row][target_pos.col] = captured_piece
