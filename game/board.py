@@ -85,12 +85,12 @@ class Board:
         first_line = next_position.row
         if next_position.col == 6:
             tower = self.get_piece_by_position(Position(first_line, 7))
-            tower.change_position(Position(first_line, 5))
+            self.__execute_move(tower, Position(first_line, 5))
         else:
             tower = self.get_piece_by_position(Position(first_line, 0))
-            tower.change_position(Position(first_line, 3))
+            self.__execute_move(tower, Position(first_line, 3))
 
-        piece.change_position(next_position)
+        self.__execute_move(piece, next_position)
 
     def add_captured_piece(self, piece: Piece) -> None:
         self.__captured_pieces[piece.color].append(piece)

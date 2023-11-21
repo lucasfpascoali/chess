@@ -72,7 +72,7 @@ class King(Piece):
             return False
 
         # Can't castle if the rook already move
-        if left_tower == None or left_tower.sign != 'R' or left_tower.color != self.color or left_tower.__move_counter != 0:
+        if left_tower == None or left_tower.sign != 'R' or left_tower.color != self.color or left_tower.move_counter != 0:
             return False
 
         enemy_pieces = self.board.get_pieces_in_game_by_color(
@@ -91,11 +91,11 @@ class King(Piece):
         right_tower = self.board.get_piece_by_position(Position(row, 7))
 
         # Can't castle if houses between king and tower aren't empty
-        if self.board.get_piece_by_position(Position(self.__first_line, 6)) != None or self.board.get_piece_by_position(Position(self.__first_line, 7)) != None:
+        if self.board.get_piece_by_position(Position(self.__first_line, 5)) != None or self.board.get_piece_by_position(Position(self.__first_line, 6)) != None:
             return False
 
         # Can't castle if the king or rook already move
-        if right_tower == None or right_tower.sign != 'R' or right_tower.color != self.color or right_tower.__move_counter != 0:
+        if right_tower == None or right_tower.sign != 'R' or right_tower.color != self.color or right_tower.move_counter != 0:
             return False
 
         enemy_pieces = self.board.get_pieces_in_game_by_color(

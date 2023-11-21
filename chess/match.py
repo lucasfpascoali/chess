@@ -96,7 +96,10 @@ class Match:
                 next_position = self.__screen.get_piece_next_position(
                     selected_piece)
 
-                self.board.move_piece(selected_piece, next_position)
+                if self.__is_castle(selected_piece, next_position):
+                    self.board.castle_move(selected_piece, next_position)
+                else:
+                    self.board.move_piece(selected_piece, next_position)
 
                 self.__screen.clear_console()
                 self.__screen.print_board()
@@ -167,8 +170,8 @@ class Match:
         if piece.sign != 'K':
             return False
 
-        if piece.color == "white" and piece.position.is_equal == [7, 4] and [position.x, position.y] in [[7, 2], [7, 6]]:
+        if piece.color == "white" and piece.position.is_equal(7, 4) and [position.row, position.col] in [[7, 2], [7, 6]]:
             return True
 
-        if piece.color == "black" and piece.position.is_equal == [0, 4] and [position.x, position.y] in [[0, 2], [0, 6]]:
+        if piece.color == "black" and piece.position.is_equal(0, 4) and [position.row, position.col] in [[0, 2], [0, 6]]:
             return True

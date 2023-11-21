@@ -9,6 +9,10 @@ class Rook(Piece):
         super().__init__(color, position, board, "R")
         self.__move_counter = 0
 
+    @property
+    def move_counter(self):
+        return self.__move_counter
+
     def move(self) -> None:
         self.__move_counter += 1
 
