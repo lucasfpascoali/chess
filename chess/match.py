@@ -10,12 +10,10 @@ from chess.king import King
 from chess.knight import Knight
 from chess.queen import Queen
 from chess.rook import Rook
-import sys
 
 
 class Match:
     def __init__(self):
-        sys.setrecursionlimit(1000000)
         self.__turn = 1
         self.__white_plays = True
         self.__game_over = False
