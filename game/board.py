@@ -66,6 +66,10 @@ class Board:
     def move_piece(self, piece: Piece, next_position: Position) -> None:
         original_pos = piece.position
 
+        # verifying en passant move
+        if piece.sign == 'P' and self.get_piece_by_position(next_position) == None and next_position.col != piece.position.col:
+            self.__en_passant_move(piece, next_position)
+
         captured_piece = self.__execute_move(piece, next_position)
 
         if piece.sign in self.__pieces_with_move_counter:
@@ -170,3 +174,9 @@ class Board:
             self.undo_add_captured_piece(captured_piece)
 
         self.board[target_pos.row][target_pos.col] = captured_piece
+
+    def __en_passant_move(self, piece: Piece, next_position: Position) -> None:
+        enemy_pawn = self.get_piece_by_position(
+            Position(piece.position.row, next_position.col))
+        self.board[enemy_pawn.position.row][enemy_pawn.position.col] = None
+        self.add_captured_piece(enemy_pawn)

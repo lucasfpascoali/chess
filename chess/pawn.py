@@ -8,6 +8,15 @@ class Pawn(Piece):
     def __init__(self, color: str, position: Position, board: Board):
         super().__init__(color, position, board, 'P')
         self.__move_counter = 0
+        self.__made_double_move = True
+
+    @property
+    def move_counter(self) -> int:
+        return self.__move_counter
+
+    @property
+    def made_double_move(self) -> bool:
+        return self.__made_double_move
 
     def move(self) -> None:
         self.__move_counter += 1
@@ -47,7 +56,28 @@ class Pawn(Piece):
         if self.board.valid_position(up_left_pos, self.color) and self.board.position_has_piece(up_left_pos):
             possible_moves[up_left_pos.row][up_left_pos.col] = True
 
+        left_side_pos = Position(self.position.row, self.position.col - 1)
+        right_side_pos = Position(self.position.row, self.position.col + 1)
+
+        line_increment = 1 if self.color == "black" else -1
+
+        # Verifying en passant
+        if self.board.valid_position(left_side_pos, self.color) and self.__verify_enpassant(left_side_pos):
+            possible_moves[left_side_pos.row +
+                           increment][left_side_pos.col] = True
+
+        if self.board.valid_position(right_side_pos, self.color) and self.__verify_enpassant(right_side_pos):
+            possible_moves[right_side_pos.row +
+                           increment][right_side_pos.col] = True
+
         return possible_moves
 
     def houses_to_enemy_king(self) -> list[Position]:
         return []
+
+    def __verify_enpassant(self, piece_pos) -> bool:
+        piece = self.board.get_piece_by_position(piece_pos)
+        if piece == None or piece.sign != 'P' or piece.move_counter != 1 or not piece.made_double_move:
+            return False
+
+        return True
