@@ -101,6 +101,10 @@ class Match:
                 else:
                     self.board.move_piece(selected_piece, next_position)
 
+                if self.board.is_promotion(selected_piece):
+                    promotion_type = self.__screen.get_promotion_type()
+                    self.__do_promotion(selected_piece, promotion_type)
+
                 self.__screen.clear_console()
                 self.__screen.print_board()
 
@@ -163,6 +167,10 @@ class Match:
                 self.__screen.print_board()
                 print(str(e))
 
+        if self.board.is_promotion(selected_piece):
+            promotion_type = self.__screen.get_promotion_type()
+            self.__do_promotion(selected_piece, promotion_type)
+
         self.__screen.clear_console()
         self.__screen.print_board()
 
@@ -175,3 +183,16 @@ class Match:
 
         if piece.color == "black" and piece.position.is_equal(0, 4) and [position.row, position.col] in [[0, 2], [0, 6]]:
             return True
+
+    def __do_promotion(self, piece: Piece, promotion_type: int):
+        new_piece = None
+        if promotion_type == 1:
+            new_piece = Rook(piece.color, piece.position, self.board)
+        elif promotion_type == 2:
+            new_piece = Knight(piece.color, piece.position, self.board)
+        elif promotion_type == 3:
+            new_piece = Bishop(piece.color, piece.position, self.board)
+        else:
+            new_piece = Queen(piece.color, piece.position, self.board)
+
+        self.board.promote(piece, new_piece)

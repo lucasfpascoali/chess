@@ -168,6 +168,25 @@ class Screen:
             except Exception as e:
                 print(str(e))
 
+    def get_promotion_type(self) -> int:
+        while True:
+            try:
+                self.clear_console()
+                self.print_board()
+                print(
+                    "Parabéns, você pode promover seu peão, digite o número da peça que quer que ele se transforme: ")
+                print("1- Torre")
+                print("2- Cavalo")
+                print("3- Bispo")
+                print("4- Rainha")
+                option = input("Digite a opção: ")
+                if option not in ["1", "2", "3", "4"]:
+                    raise Exception("Opção Inválida!")
+
+                return int(option)
+            except Exception as e:
+                print(str(e))
+
     def __print_piece(self, piece: Piece) -> None:
         if piece == None:
             print("_ ", end='')

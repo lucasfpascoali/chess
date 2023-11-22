@@ -156,6 +156,21 @@ class Board:
         self.__board[piece.position.row][piece.position.col] = piece
         self.__pieces_in_game[piece.color].append(piece)
 
+    def is_promotion(self, piece: Piece) -> bool:
+        if piece.sign != 'P':
+            return False
+
+        if piece.color == "white" and piece.position.row == 0:
+            return True
+
+        if piece.color == "black" and piece.position.row == 7:
+            return True
+
+    def promote(self, old_piece: Piece, new_piece: Piece) -> None:
+        self.__pieces_in_game[old_piece.color].remove(old_piece)
+        self.__pieces_in_game[old_piece.color].append(new_piece)
+        self.board[old_piece.position.row][old_piece.position.col] = new_piece
+
     def __execute_move(self, piece: Piece, target_pos: Position) -> Piece | None:
         captured_piece = self.get_piece_by_position(target_pos)
         if captured_piece != None:
